@@ -6,8 +6,8 @@
 # COLOR PALETTE
 # -------------------------
 
-PRIMARY = "#1565C0"          # Biru utama
-PRIMARY_DARK = "#0D47A1"     # Sidebar
+PRIMARY = "#1565C0"  # Biru utama
+PRIMARY_DARK = "#0D47A1"  # Sidebar
 PRIMARY_LIGHT = "#42A5F5"
 
 BACKGROUND = "#F4F7FC"
