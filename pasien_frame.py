@@ -13,7 +13,8 @@ class PasienFrame(Frame):
         self.db = Database()
         self.selected_id = None
 
-        Label(self, text="DATA PASIEN", font=("Arial", 18, "bold")).pack(pady=10)
+        Label(self, text="DATA PASIEN",
+              font=("Arial", 18, "bold")).pack(pady=10)
 
         Label(self, text="Nama")
         self.nama = Entry(self, width=35)
@@ -27,14 +28,20 @@ class PasienFrame(Frame):
         self.alamat = Entry(self, width=35)
         self.alamat.pack()
 
-        Button(self, text="Tambah", command=self.tambah).pack(pady=5)
+        Button(self, text="Tambah",
+               command=self.tambah).pack(pady=5)
 
-        Button(self, text="Update", command=self.update).pack(pady=5)
+        Button(self, text="Update",
+               command=self.update).pack(pady=5)
 
-        Button(self, text="Hapus", command=self.hapus).pack(pady=5)
+        Button(self, text="Hapus",
+               command=self.hapus).pack(pady=5)
 
         self.tree = ttk.Treeview(
-            self, columns=("ID", "Nama", "Umur", "Alamat"), show="headings", height=8
+            self,
+            columns=("ID", "Nama", "Umur", "Alamat"),
+            show="headings",
+            height=8
         )
 
         self.tree.heading("ID", text="ID")
@@ -46,7 +53,11 @@ class PasienFrame(Frame):
 
         self.tree.pack(pady=10)
 
-        Button(self, text="Kembali", command=self.kembali).pack()
+        Button(
+            self,
+            text="Kembali",
+            command=self.kembali
+        ).pack()
 
         self.load_data()
 
@@ -55,7 +66,9 @@ class PasienFrame(Frame):
         for item in self.tree.get_children():
             self.tree.delete(item)
 
-        data = self.db.fetchall("SELECT * FROM pasien")
+        data = self.db.fetchall(
+            "SELECT * FROM pasien"
+        )
 
         for row in data:
             self.tree.insert("", END, values=row)
@@ -64,7 +77,11 @@ class PasienFrame(Frame):
 
         self.db.execute(
             "INSERT INTO pasien(nama,umur,alamat) VALUES(?,?,?)",
-            (self.nama.get(), self.umur.get(), self.alamat.get()),
+            (
+                self.nama.get(),
+                self.umur.get(),
+                self.alamat.get()
+            )
         )
 
         messagebox.showinfo("Berhasil", "Data berhasil ditambahkan")
@@ -96,7 +113,12 @@ class PasienFrame(Frame):
 
         self.db.execute(
             "UPDATE pasien SET nama=?,umur=?,alamat=? WHERE id=?",
-            (self.nama.get(), self.umur.get(), self.alamat.get(), self.selected_id),
+            (
+                self.nama.get(),
+                self.umur.get(),
+                self.alamat.get(),
+                self.selected_id
+            )
         )
 
         messagebox.showinfo("Berhasil", "Data berhasil diubah")
@@ -108,7 +130,10 @@ class PasienFrame(Frame):
         if self.selected_id is None:
             return
 
-        self.db.execute("DELETE FROM pasien WHERE id=?", (self.selected_id,))
+        self.db.execute(
+            "DELETE FROM pasien WHERE id=?",
+            (self.selected_id,)
+        )
 
         messagebox.showinfo("Berhasil", "Data berhasil dihapus")
 
