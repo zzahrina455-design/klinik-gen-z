@@ -9,7 +9,7 @@ class MainApp(Tk):
         super().__init__()
 
         self.title("Sistem Manajemen Data Pasien")
-        self.geometry("1100x800")
+        self.geometry("1000x800")
         self.configure(bg="#F4F7FC")
         self.resizable(False, False)
 
