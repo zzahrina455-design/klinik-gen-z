@@ -50,14 +50,6 @@ class ReviewFrame(Frame):
             font=TITLE_FONT,
         ).pack(anchor="w", padx=25, pady=(15, 0))
 
-        Label(
-            header,
-            text="Mohon isi survei berikut untuk membantu kami meningkatkan kualitas pelayanan.",
-            bg=WHITE,
-            fg=TEXT_SECONDARY,
-            font=TEXT_FONT,
-        ).pack(anchor="w", padx=25)
-
         # ======================================================
         # BODY
         # ======================================================
