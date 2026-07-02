@@ -58,18 +58,15 @@ class Database:
         self.cursor.execute("""
         CREATE TABLE IF NOT EXISTS review(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            id_pasien INTEGER,
-            keluhan TEXT,
-            suhu TEXT,
-            tekanan_darah TEXT,
-            berat_badan TEXT,
-            tinggi_badan TEXT,
-            rating INTEGER,
-            komentar TEXT,
-            FOREIGN KEY(id_pasien) REFERENCES pasien(id)
+            nama TEXT,
+            pelayanan_petugas TEXT,
+            kebersihan TEXT,
+            kenyamanan TEXT,
+            kecepatan TEXT,
+            akan_kembali TEXT,
+            saran TEXT
         )
         """)
-
         self.conn.commit()
 
     # ==========================

@@ -44,11 +44,19 @@ class ReviewFrame(Frame):
 
         Label(
             header,
-            text="Survei Pemeriksaan Pasien",
+            text="Survei Kepuasan Pasien",
             bg=WHITE,
             fg=TEXT,
             font=TITLE_FONT,
         ).pack(anchor="w", padx=25, pady=(15, 0))
+
+        Label(
+            header,
+            text="Mohon isi survei berikut untuk membantu kami meningkatkan kualitas pelayanan.",
+            bg=WHITE,
+            fg=TEXT_SECONDARY,
+            font=TEXT_FONT,
+        ).pack(anchor="w", padx=25)
 
         # ======================================================
         # BODY
@@ -75,7 +83,7 @@ class ReviewFrame(Frame):
 
         Label(
             form,
-            text="Form Survei Pasien",
+            text="Form Survei Kepuasan",
             bg=WHITE,
             fg=TEXT,
             font=("Segoe UI", 16, "bold"),
@@ -83,15 +91,15 @@ class ReviewFrame(Frame):
 
         Label(
             form,
-            text="Isi data pemeriksaan awal pasien.",
+            text="Silakan isi penilaian Anda terhadap pelayanan klinik.",
             bg=WHITE,
             fg=TEXT_SECONDARY,
             font=("Segoe UI", 10),
         ).grid(row=1, column=0, columnspan=2, sticky="w", padx=25, pady=(0, 20))
 
-        # ======================================================
-        # NAMA PASIEN
-        # ======================================================
+        # ==========================================
+        # NAMA
+        # ==========================================
 
         Label(
             form,
@@ -108,160 +116,154 @@ class ReviewFrame(Frame):
 
         self.nama.grid(row=2, column=1, padx=25, pady=8)
 
-        # ======================================================
-        # KELUHAN
-        # ======================================================
+        nilai = ["Sangat Baik", "Baik", "Cukup", "Kurang", "Sangat Kurang"]
+
+        # ==========================================
+        # PELAYANAN PETUGAS
+        # ==========================================
 
         Label(
             form,
-            text="Keluhan Utama",
+            text="Pelayanan Petugas",
             bg=WHITE,
             font=TEXT_FONT,
-        ).grid(row=3, column=0, sticky="nw", padx=25, pady=8)
+        ).grid(row=3, column=0, sticky="w", padx=25, pady=8)
 
-        self.keluhan = Text(
+        self.pelayanan = ttk.Combobox(
             form,
-            width=28,
-            height=3,
-            font=("Segoe UI", 10),
+            values=nilai,
+            state="readonly",
+            width=32,
         )
 
-        self.keluhan.grid(row=3, column=1, padx=25, pady=8)
+        self.pelayanan.grid(row=3, column=1, padx=25, pady=8)
 
-        # ======================================================
-        # RIWAYAT PENYAKIT
-        # ======================================================
+        # ==========================================
+        # KEBERSIHAN
+        # ==========================================
 
         Label(
             form,
-            text="Riwayat Penyakit",
+            text="Kebersihan Klinik",
             bg=WHITE,
             font=TEXT_FONT,
-        ).grid(row=4, column=0, sticky="nw", padx=25, pady=8)
+        ).grid(row=4, column=0, sticky="w", padx=25, pady=8)
 
-        self.riwayat = Text(
+        self.kebersihan = ttk.Combobox(
             form,
-            width=28,
-            height=3,
-            font=("Segoe UI", 10),
+            values=nilai,
+            state="readonly",
+            width=32,
         )
 
-        self.riwayat.grid(row=4, column=1, padx=25, pady=8)
+        self.kebersihan.grid(row=4, column=1, padx=25, pady=8)
 
-        # ======================================================
-        # ALERGI
-        # ======================================================
+        # ==========================================
+        # KENYAMANAN
+        # ==========================================
 
         Label(
             form,
-            text="Alergi",
+            text="Kenyamanan",
             bg=WHITE,
             font=TEXT_FONT,
         ).grid(row=5, column=0, sticky="w", padx=25, pady=8)
 
-        self.alergi = Entry(
+        self.kenyamanan = ttk.Combobox(
             form,
-            width=35,
-            font=("Segoe UI", 10),
+            values=nilai,
+            state="readonly",
+            width=32,
         )
 
-        self.alergi.grid(row=5, column=1, padx=25, pady=8)
+        self.kenyamanan.grid(row=5, column=1, padx=25, pady=8)
 
-        # ======================================================
-        # SUHU
-        # ======================================================
+        # ==========================================
+        # KECEPATAN
+        # ==========================================
 
         Label(
             form,
-            text="Suhu Tubuh",
+            text="Kecepatan Pelayanan",
             bg=WHITE,
             font=TEXT_FONT,
         ).grid(row=6, column=0, sticky="w", padx=25, pady=8)
 
-        self.suhu = Entry(
+        self.kecepatan = ttk.Combobox(
             form,
-            width=35,
-            font=("Segoe UI", 10),
+            values=nilai,
+            state="readonly",
+            width=32,
         )
 
-        self.suhu.grid(row=6, column=1, padx=25, pady=8)
+        self.kecepatan.grid(row=6, column=1, padx=25, pady=8)
 
-        # ======================================================
-        # TEKANAN DARAH
-        # ======================================================
+        # ==========================================
+        # BERSEDIA KEMBALI
+        # ==========================================
 
         Label(
             form,
-            text="Tekanan Darah",
+            text="Akan Berobat Kembali?",
             bg=WHITE,
             font=TEXT_FONT,
         ).grid(row=7, column=0, sticky="w", padx=25, pady=8)
 
-        self.tekanan = Entry(
-            form,
-            width=35,
-            font=("Segoe UI", 10),
-        )
+        self.kembali = StringVar()
 
-        self.tekanan.grid(row=7, column=1, padx=25, pady=8)
+        radio = Frame(form, bg=WHITE)
+        radio.grid(row=7, column=1, sticky="w", padx=25, pady=8)
 
-        # ======================================================
-        # BERAT BADAN
-        # ======================================================
+        Radiobutton(
+            radio,
+            text="Ya",
+            variable=self.kembali,
+            value="Ya",
+            bg=WHITE,
+        ).pack(side=LEFT)
+
+        Radiobutton(
+            radio,
+            text="Tidak",
+            variable=self.kembali,
+            value="Tidak",
+            bg=WHITE,
+        ).pack(side=LEFT, padx=15)
+
+        # ==========================================
+        # SARAN
+        # ==========================================
 
         Label(
             form,
-            text="Berat Badan (Kg)",
+            text="Saran & Masukan",
             bg=WHITE,
             font=TEXT_FONT,
-        ).grid(row=8, column=0, sticky="w", padx=25, pady=8)
+        ).grid(row=8, column=0, sticky="nw", padx=25, pady=8)
 
-        self.berat = Entry(
+        self.saran = Text(
             form,
-            width=35,
+            width=28,
+            height=5,
             font=("Segoe UI", 10),
         )
 
-        self.berat.grid(row=8, column=1, padx=25, pady=8)
+        self.saran.grid(row=8, column=1, padx=25, pady=8)
 
-        # ======================================================
-        # TINGGI BADAN
-        # ======================================================
-
-        Label(
-            form,
-            text="Tinggi Badan (Cm)",
-            bg=WHITE,
-            font=TEXT_FONT,
-        ).grid(row=9, column=0, sticky="w", padx=25, pady=8)
-
-        self.tinggi = Entry(
-            form,
-            width=35,
-            font=("Segoe UI", 10),
-        )
-
-        self.tinggi.grid(row=9, column=1, padx=25, pady=8)
-
-        # ======================================================
+        # ==========================================
         # BUTTON
-        # ======================================================
+        # ==========================================
 
         Button(
             form,
-            text="Simpan Survei",
+            text="Kirim Survei",
             bg=PRIMARY,
             fg="white",
             relief="flat",
-            width=22,
             font=("Segoe UI", 10, "bold"),
+            width=22,
             command=self.simpan,
-        ).grid(
-            row=10,
-            column=0,
-            columnspan=2,
-            pady=25,
-        )
+        ).grid(row=9, column=0, columnspan=2, pady=25)
 
         # ======================================================
         # PANEL KANAN
@@ -276,19 +278,18 @@ class ReviewFrame(Frame):
         )
 
         right.pack(side=LEFT, fill=Y, padx=(20, 0))
-
         right.pack_propagate(False)
 
         Label(
             right,
-            text="🩺",
+            text="😊",
             bg=WHITE,
             font=("Segoe UI Emoji", 70),
         ).pack(pady=(25, 10))
 
         Label(
             right,
-            text="Pemeriksaan Awal",
+            text="Survei Kepuasan",
             bg=WHITE,
             fg=PRIMARY,
             font=("Segoe UI", 16, "bold"),
@@ -296,7 +297,7 @@ class ReviewFrame(Frame):
 
         Label(
             right,
-            text="Lengkapi data kesehatan\npasien sebelum diperiksa dokter.",
+            text="Masukan Anda sangat\nmembantu kami meningkatkan\nkualitas pelayanan klinik.",
             bg=WHITE,
             fg=TEXT_SECONDARY,
             justify="center",
@@ -305,37 +306,35 @@ class ReviewFrame(Frame):
 
         Label(
             right,
-            text="✔ Lengkap\n✔ Cepat\n✔ Akurat",
+            text="✔ Mudah\n✔ Cepat\n✔ Rahasia",
             bg=WHITE,
             fg=SUCCESS,
             justify="left",
             font=("Segoe UI", 11),
         ).pack(pady=20)
 
-    # =====================================================
+        # =====================================================
+
     # SIMPAN SURVEI
     # =====================================================
 
     def simpan(self):
 
         nama = self.nama.get().strip()
-        keluhan = self.keluhan.get("1.0", END).strip()
-        riwayat = self.riwayat.get("1.0", END).strip()
-        alergi = self.alergi.get().strip()
-        suhu = self.suhu.get().strip()
-        tekanan = self.tekanan.get().strip()
-        berat = self.berat.get().strip()
-        tinggi = self.tinggi.get().strip()
+        pelayanan = self.pelayanan.get().strip()
+        kebersihan = self.kebersihan.get().strip()
+        kenyamanan = self.kenyamanan.get().strip()
+        kecepatan = self.kecepatan.get().strip()
+        kembali = self.kembali.get().strip()
+        saran = self.saran.get("1.0", END).strip()
 
         if (
             nama == ""
-            or keluhan == ""
-            or riwayat == ""
-            or alergi == ""
-            or suhu == ""
-            or tekanan == ""
-            or berat == ""
-            or tinggi == ""
+            or pelayanan == ""
+            or kebersihan == ""
+            or kenyamanan == ""
+            or kecepatan == ""
+            or kembali == ""
         ):
             messagebox.showwarning("Peringatan", "Semua data harus diisi!")
             return
@@ -347,21 +346,30 @@ class ReviewFrame(Frame):
                 INSERT INTO review
                 (
                     nama,
-                    keluhan,
-                    riwayat,
-                    alergi,
-                    suhu,
-                    tekanan_darah,
-                    berat_badan,
-                    tinggi_badan
+                    pelayanan_petugas,
+                    kebersihan,
+                    kenyamanan,
+                    kecepatan,
+                    akan_kembali,
+                    saran
                 )
                 VALUES
-                (?,?,?,?,?,?,?,?)
+                (?,?,?,?,?,?,?)
                 """,
-                (nama, keluhan, riwayat, alergi, suhu, tekanan, berat, tinggi),
+                (
+                    nama,
+                    pelayanan,
+                    kebersihan,
+                    kenyamanan,
+                    kecepatan,
+                    kembali,
+                    saran,
+                ),
             )
 
-            messagebox.showinfo("Berhasil", "Data survei berhasil disimpan.")
+            messagebox.showinfo(
+                "Berhasil", "Terima kasih atas survei yang telah Anda isi."
+            )
 
             self.reset_form()
 
@@ -377,25 +385,23 @@ class ReviewFrame(Frame):
 
         self.nama.delete(0, END)
 
-        self.keluhan.delete("1.0", END)
+        self.pelayanan.set("")
 
-        self.riwayat.delete("1.0", END)
+        self.kebersihan.set("")
 
-        self.alergi.delete(0, END)
+        self.kenyamanan.set("")
 
-        self.suhu.delete(0, END)
+        self.kecepatan.set("")
 
-        self.tekanan.delete(0, END)
+        self.kembali.set("")
 
-        self.berat.delete(0, END)
-
-        self.tinggi.delete(0, END)
+        self.saran.delete("1.0", END)
 
     # =====================================================
     # KEMBALI
     # =====================================================
 
-    def kembali(self):
+    def kembali_dashboard(self):
 
         self.master.clear_frame()
 
