@@ -19,21 +19,13 @@ class LoginFrame(Frame):
         # LEFT PANEL
         # =========================
 
-        left = Frame(
-            self,
-            bg=PRIMARY_DARK,
-            width=350
-        )
+        left = Frame(self, bg=PRIMARY_DARK, width=350)
 
         left.pack(side=LEFT, fill=Y)
         left.pack_propagate(False)
 
         Label(
-            left,
-            text="🩺",
-            font=("Segoe UI Emoji", 60),
-            bg=PRIMARY_DARK,
-            fg="white"
+            left, text="🩺", font=("Segoe UI Emoji", 60), bg=PRIMARY_DARK, fg="white"
         ).pack(pady=(50, 10))
 
         Label(
@@ -41,7 +33,7 @@ class LoginFrame(Frame):
             text="KLINIK GEN-Z",
             font=("Segoe UI", 22, "bold"),
             bg=PRIMARY_DARK,
-            fg="white"
+            fg="white",
         ).pack()
 
         Label(
@@ -50,7 +42,7 @@ class LoginFrame(Frame):
             font=("Segoe UI", 12),
             justify="center",
             bg=PRIMARY_DARK,
-            fg="white"
+            fg="white",
         ).pack(pady=20)
 
         Label(
@@ -58,41 +50,27 @@ class LoginFrame(Frame):
             text="Cepat • Aman • Modern",
             font=("Segoe UI", 10),
             bg=PRIMARY_DARK,
-            fg="#BBDEFB"
+            fg="#BBDEFB",
         ).pack()
 
         # =========================
         # RIGHT PANEL
         # =========================
 
-        right = Frame(
-            self,
-            bg=BACKGROUND
-        )
+        right = Frame(self, bg=BACKGROUND)
 
         right.pack(side=RIGHT, fill=BOTH, expand=True)
 
-        card = Frame(
-            right,
-            bg="white",
-            bd=1,
-            relief="solid"
-        )
+        card = Frame(right, bg="white", bd=1, relief="solid")
 
-        card.place(
-            relx=0.5,
-            rely=0.5,
-            anchor="center",
-            width=420,
-            height=420
-        )
+        card.place(relx=0.5, rely=0.5, anchor="center", width=420, height=420)
 
         Label(
             card,
             text="LOGIN",
             font=("Segoe UI", 22, "bold"),
             bg="white",
-            fg=PRIMARY_DARK
+            fg=PRIMARY_DARK,
         ).pack(pady=(30, 25))
 
         # =========================
@@ -100,61 +78,30 @@ class LoginFrame(Frame):
         # =========================
 
         Label(
-            card,
-            text="Username",
-            font=("Segoe UI", 10, "bold"),
-            bg="white",
-            anchor="w"
+            card, text="Username", font=("Segoe UI", 10, "bold"), bg="white", anchor="w"
         ).pack(fill="x", padx=40)
 
-        self.username = Entry(
-            card,
-            font=("Segoe UI", 11),
-            relief="solid",
-            bd=1
-        )
+        self.username = Entry(card, font=("Segoe UI", 11), relief="solid", bd=1)
 
-        self.username.pack(
-            padx=40,
-            fill="x",
-            ipady=8,
-            pady=(5, 20)
-        )
+        self.username.pack(padx=40, fill="x", ipady=8, pady=(5, 20))
 
         # =========================
         # Password
         # =========================
 
         Label(
-            card,
-            text="Password",
-            font=("Segoe UI", 10, "bold"),
-            bg="white",
-            anchor="w"
+            card, text="Password", font=("Segoe UI", 10, "bold"), bg="white", anchor="w"
         ).pack(fill="x", padx=40)
 
         # Frame agar Entry dan tombol mata sejajar
         password_frame = Frame(card, bg="white")
-        password_frame.pack(
-            padx=40,
-            fill="x",
-            pady=(5, 25)
-        )
+        password_frame.pack(padx=40, fill="x", pady=(5, 25))
 
         self.password = Entry(
-            password_frame,
-            show="*",
-            font=("Segoe UI", 11),
-            relief="solid",
-            bd=1
+            password_frame, show="*", font=("Segoe UI", 11), relief="solid", bd=1
         )
 
-        self.password.pack(
-            side=LEFT,
-            fill="x",
-            expand=True,
-            ipady=8
-        )
+        self.password.pack(side=LEFT, fill="x", expand=True, ipady=8)
 
         # Status password
         self.show_password = False
@@ -168,7 +115,7 @@ class LoginFrame(Frame):
             bd=0,
             cursor="hand2",
             activebackground="white",
-            command=self.toggle_password
+            command=self.toggle_password,
         )
 
         self.toggle_btn.pack(side=RIGHT, padx=(8, 0))
@@ -187,18 +134,10 @@ class LoginFrame(Frame):
             font=("Segoe UI", 11, "bold"),
             relief="flat",
             cursor="hand2",
-            command=self.login
-        ).pack(
-            padx=40,
-            fill="x",
-            ipady=8
-        )
+            command=self.login,
+        ).pack(padx=40, fill="x", ipady=8)
 
-        Label(
-            card,
-            text="",
-            bg="white"
-        ).pack(pady=5)
+        Label(card, text="", bg="white").pack(pady=5)
 
         Button(
             card,
@@ -210,7 +149,7 @@ class LoginFrame(Frame):
             cursor="hand2",
             activebackground="white",
             activeforeground=PRIMARY_DARK,
-            command=self.master.show_register
+            command=self.master.show_register,
         ).pack()
 
     # =========================
@@ -238,19 +177,13 @@ class LoginFrame(Frame):
         password = self.password.get()
 
         if username == "" or password == "":
-            messagebox.showwarning(
-                "Peringatan",
-                "Username dan Password harus diisi!"
-            )
+            messagebox.showwarning("Peringatan", "Username dan Password harus diisi!")
             return
 
         filename = "users.json"
 
         if not os.path.exists(filename):
-            messagebox.showerror(
-                "Error",
-                "Belum ada akun."
-            )
+            messagebox.showerror("Error", "Belum ada akun.")
             return
 
         with open(filename, "r") as f:
@@ -260,19 +193,14 @@ class LoginFrame(Frame):
 
             if user["username"] == username and user["password"] == password:
 
-                messagebox.showinfo(
-                    "Berhasil",
-                    "Login berhasil."
-                )
+                messagebox.showinfo("Berhasil", "Login berhasil.")
 
                 self.master.clear_frame()
 
                 from dashboard_frame import DashboardFrame
+
                 DashboardFrame(self.master)
 
                 return
 
-        messagebox.showerror(
-            "Gagal",
-            "Username atau Password salah!"
-        )
+        messagebox.showerror("Gagal", "Username atau Password salah!")

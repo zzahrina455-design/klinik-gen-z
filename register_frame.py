@@ -21,11 +21,7 @@ class RegisterFrame(Frame):
         left.pack_propagate(False)
 
         Label(
-            left,
-            text="🩺",
-            font=("Segoe UI Emoji", 60),
-            bg=PRIMARY_DARK,
-            fg="white"
+            left, text="🩺", font=("Segoe UI Emoji", 60), bg=PRIMARY_DARK, fg="white"
         ).pack(pady=(90, 10))
 
         Label(
@@ -33,7 +29,7 @@ class RegisterFrame(Frame):
             text="KLINIK GEN-Z",
             font=("Segoe UI", 22, "bold"),
             bg=PRIMARY_DARK,
-            fg="white"
+            fg="white",
         ).pack()
 
         Label(
@@ -42,7 +38,7 @@ class RegisterFrame(Frame):
             justify="center",
             font=("Segoe UI", 11),
             bg=PRIMARY_DARK,
-            fg="white"
+            fg="white",
         ).pack(pady=20)
 
         # ========= RIGHT =========
@@ -58,7 +54,7 @@ class RegisterFrame(Frame):
             text="REGISTER",
             font=("Segoe UI", 22, "bold"),
             bg="white",
-            fg=PRIMARY_DARK
+            fg=PRIMARY_DARK,
         ).pack(pady=25)
 
         # ==========================
@@ -66,56 +62,27 @@ class RegisterFrame(Frame):
         # ==========================
 
         Label(
-            card,
-            text="Username",
-            bg="white",
-            font=("Segoe UI", 10, "bold"),
-            anchor="w"
+            card, text="Username", bg="white", font=("Segoe UI", 10, "bold"), anchor="w"
         ).pack(fill="x", padx=40)
 
-        self.username = Entry(
-            card,
-            font=("Segoe UI", 11)
-        )
+        self.username = Entry(card, font=("Segoe UI", 11))
 
-        self.username.pack(
-            fill="x",
-            padx=40,
-            ipady=8,
-            pady=(5, 20)
-        )
+        self.username.pack(fill="x", padx=40, ipady=8, pady=(5, 20))
 
         # ==========================
         # Password
         # ==========================
 
         Label(
-            card,
-            text="Password",
-            bg="white",
-            font=("Segoe UI", 10, "bold"),
-            anchor="w"
+            card, text="Password", bg="white", font=("Segoe UI", 10, "bold"), anchor="w"
         ).pack(fill="x", padx=40)
 
         password_frame = Frame(card, bg="white")
-        password_frame.pack(
-            fill="x",
-            padx=40,
-            pady=(5, 25)
-        )
+        password_frame.pack(fill="x", padx=40, pady=(5, 25))
 
-        self.password = Entry(
-            password_frame,
-            show="*",
-            font=("Segoe UI", 11)
-        )
+        self.password = Entry(password_frame, show="*", font=("Segoe UI", 11))
 
-        self.password.pack(
-            side=LEFT,
-            fill="x",
-            expand=True,
-            ipady=8
-        )
+        self.password.pack(side=LEFT, fill="x", expand=True, ipady=8)
 
         # Status password
         self.show_password = False
@@ -129,13 +96,10 @@ class RegisterFrame(Frame):
             bd=0,
             cursor="hand2",
             activebackground="white",
-            command=self.toggle_password
+            command=self.toggle_password,
         )
 
-        self.toggle_btn.pack(
-            side=RIGHT,
-            padx=(8, 0)
-        )
+        self.toggle_btn.pack(side=RIGHT, padx=(8, 0))
 
         # ==========================
         # Button Register
@@ -149,12 +113,8 @@ class RegisterFrame(Frame):
             relief="flat",
             cursor="hand2",
             font=("Segoe UI", 11, "bold"),
-            command=self.register
-        ).pack(
-            fill="x",
-            padx=40,
-            ipady=8
-        )
+            command=self.register,
+        ).pack(fill="x", padx=40, ipady=8)
 
         Button(
             card,
@@ -164,7 +124,7 @@ class RegisterFrame(Frame):
             relief="flat",
             cursor="hand2",
             font=("Segoe UI", 10),
-            command=self.master.show_login
+            command=self.master.show_login,
         ).pack(pady=15)
 
     # ==========================
@@ -192,10 +152,7 @@ class RegisterFrame(Frame):
         password = self.password.get()
 
         if username == "" or password == "":
-            messagebox.showwarning(
-                "Peringatan",
-                "Semua data harus diisi!"
-            )
+            messagebox.showwarning("Peringatan", "Semua data harus diisi!")
             return
 
         filename = "users.json"
@@ -209,23 +166,14 @@ class RegisterFrame(Frame):
 
         for user in users:
             if user["username"] == username:
-                messagebox.showerror(
-                    "Gagal",
-                    "Username sudah digunakan!"
-                )
+                messagebox.showerror("Gagal", "Username sudah digunakan!")
                 return
 
-        users.append({
-            "username": username,
-            "password": password
-        })
+        users.append({"username": username, "password": password})
 
         with open(filename, "w") as f:
             json.dump(users, f, indent=4)
 
-        messagebox.showinfo(
-            "Berhasil",
-            "Registrasi berhasil."
-        )
+        messagebox.showinfo("Berhasil", "Registrasi berhasil.")
 
         self.master.show_login()
