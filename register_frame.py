@@ -13,8 +13,6 @@ class RegisterFrame(Frame):
         super().__init__(master, bg=BACKGROUND)
         self.pack(fill="both", expand=True)
 
-        self.db = Database()
-
         # ========= LEFT ==========
         left = Frame(self, bg=PRIMARY_DARK, width=350)
         left.pack(side=LEFT, fill=Y)
@@ -148,31 +146,39 @@ class RegisterFrame(Frame):
 
     def register(self):
 
-        username = self.username.get()
-        password = self.password.get()
+        username = self.username.get().strip()
+        password = self.password.get().strip()
 
-        if username == "" or password == "":
+        if not username or not password:
             messagebox.showwarning("Peringatan", "Semua data harus diisi!")
             return
 
         filename = "users.json"
 
+        # Jika file belum ada, buat file kosong
         if not os.path.exists(filename):
-            with open(filename, "w") as f:
-                json.dump([], f)
+            with open(filename, "w", encoding="utf-8") as file:
+                json.dump([], file)
 
-        with open(filename, "r") as f:
-            users = json.load(f)
+        # Membaca data user
+        try:
+            with open(filename, "r", encoding="utf-8") as file:
+                users = json.load(file)
+        except json.JSONDecodeError:
+            users = []
 
+        # Cek username sudah ada atau belum
         for user in users:
-            if user["username"] == username:
+            if user.get("username") == username:
                 messagebox.showerror("Gagal", "Username sudah digunakan!")
                 return
 
+        # Tambahkan user baru
         users.append({"username": username, "password": password})
 
-        with open(filename, "w") as f:
-            json.dump(users, f, indent=4)
+        # Simpan kembali ke file JSON
+        with open(filename, "w", encoding="utf-8") as file:
+            json.dump(users, file, indent=4, ensure_ascii=False)
 
         messagebox.showinfo("Berhasil", "Registrasi berhasil.")
 
