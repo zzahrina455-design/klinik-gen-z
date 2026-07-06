@@ -1,185 +1,235 @@
-import json
-import os
-from tkinter import *
+import tkinter as tk
 from tkinter import messagebox
-
-from database import Database
-from style import *
+from models import UserModel
 
 
-class RegisterFrame(Frame):
+class RegisterFrame(tk.Frame):
 
     def __init__(self, master):
-        super().__init__(master, bg=BACKGROUND)
-        self.pack(fill="both", expand=True)
+        # Menggunakan warna background utama yang sama dengan login
+        super().__init__(master, bg="#EBF1FA")
+        self.pack(fill=tk.BOTH, expand=True)
 
-        # ========= LEFT ==========
-        left = Frame(self, bg=PRIMARY_DARK, width=350)
-        left.pack(side=LEFT, fill=Y)
-        left.pack_propagate(False)
+        self.user_model = UserModel()
 
-        Label(
-            left, text="🩺", font=("Segoe UI Emoji", 60), bg=PRIMARY_DARK, fg="white"
-        ).pack(pady=(90, 10))
+        # Konfigurasi grid utama agar SAMA PERSIS dengan login
+        self.grid_columnconfigure(0, weight=1)  # Sisi Kiri (Logo & Judul)
+        self.grid_columnconfigure(1, weight=1)  # Sisi Kanan (Form Card)
+        self.grid_rowconfigure(0, weight=1)
 
-        Label(
-            left,
+        # ==========================================
+        # SISI KIRI: LOGO & JUDUL KLINIK (Sama dengan Login)
+        # ==========================================
+        left_container = tk.Frame(self, bg="#EBF1FA")
+        left_container.grid(row=0, column=0, sticky="nsew", padx=50)
+        left_container.grid_rowconfigure((0, 1, 2, 3), weight=1)
+        left_container.grid_columnconfigure(0, weight=1)
+
+        # Logo Besar
+        logo_label = tk.Label(
+            left_container,
+            text="✚",
+            font=("Arial", 64, "bold"),
+            fg="#1A5CFF",
+            bg="#EBF1FA",
+        )
+        logo_label.grid(row=1, column=0, sticky="s", pady=10)
+
+        # Judul Utama
+        title_label = tk.Label(
+            left_container,
             text="KLINIK GEN-Z",
-            font=("Segoe UI", 22, "bold"),
-            bg=PRIMARY_DARK,
-            fg="white",
-        ).pack()
+            font=("Arial", 28, "bold"),
+            fg="#0F172A",
+            bg="#EBF1FA",
+        )
+        title_label.grid(row=2, column=0, sticky="n")
 
-        Label(
-            left,
-            text="Daftarkan akun\nuntuk mulai menggunakan\nSistem Klinik",
+        # Subtitle
+        subtitle_label = tk.Label(
+            left_container,
+            text="Sistem Manajemen\nData Pasien",
+            font=("Arial", 14),
+            fg="#64748B",
+            bg="#EBF1FA",
             justify="center",
-            font=("Segoe UI", 11),
-            bg=PRIMARY_DARK,
-            fg="white",
-        ).pack(pady=20)
+        )
+        subtitle_label.grid(row=2, column=0, sticky="n", pady=60)
 
-        # ========= RIGHT =========
+        # ==========================================
+        # SISI KANAN: CARD CONTAINER (FORM REGISTER)
+        # ==========================================
+        card_form = tk.Frame(self, bg="#FFFFFF", padx=40, pady=30)
+        card_form.grid(row=0, column=1, padx=60, pady=40, sticky="nsew")
+        card_form.grid_columnconfigure(0, weight=1)
 
-        right = Frame(self, bg=BACKGROUND)
-        right.pack(side=RIGHT, fill=BOTH, expand=True)
+        # Header di dalam Card
+        register_title = tk.Label(
+            card_form,
+            text="Register",
+            font=("Arial", 22, "bold"),
+            fg="#0F172A",
+            bg="#FFFFFF",
+        )
+        register_title.pack(pady=(10, 5))
 
-        card = Frame(right, bg="white", bd=1, relief="solid")
-        card.place(relx=0.5, rely=0.5, anchor="center", width=420, height=450)
+        register_subtitle = tk.Label(
+            card_form,
+            text="Buat akun baru",
+            font=("Arial", 10),
+            fg="#94A3B8",
+            bg="#FFFFFF",
+        )
+        register_subtitle.pack(pady=(0, 20))
 
-        Label(
-            card,
-            text="REGISTER",
-            font=("Segoe UI", 22, "bold"),
-            bg="white",
-            fg=PRIMARY_DARK,
-        ).pack(pady=25)
+        # ---- Input Nama Lengkap ----
+        nama_frame = tk.Frame(
+            card_form, bg="#F8FAFC",
+            highlightbackground="#E2E8F0",
+            highlightthickness=1
+        )
+        nama_frame.pack(fill=tk.X, pady=6, ipady=4)
 
-        # ==========================
-        # Username
-        # ==========================
+        self.nama = tk.Entry(
+            nama_frame,
+            font=("Arial", 11),
+            bg="#F8FAFC",
+            bd=0,
+            fg="#0F172A",
+            insertbackground="#0F172A",
+        )
+        self.nama.pack(fill=tk.X, padx=10, pady=5)
+        self.set_placeholder(self.nama, "Nama Lengkap")
 
-        Label(
-            card, text="Username", bg="white", font=("Segoe UI", 10, "bold"), anchor="w"
-        ).pack(fill="x", padx=40)
+        # ---- Input Username ----
+        username_frame = tk.Frame(
+            card_form, bg="#F8FAFC",
+            highlightbackground="#E2E8F0",
+            highlightthickness=1
+        )
+        username_frame.pack(fill=tk.X, pady=6, ipady=4)
 
-        self.username = Entry(card, font=("Segoe UI", 11))
+        self.username = tk.Entry(
+            username_frame,
+            font=("Arial", 11),
+            bg="#F8FAFC",
+            bd=0,
+            fg="#0F172A",
+            insertbackground="#0F172A",
+        )
+        self.username.pack(fill=tk.X, padx=10, pady=5)
+        self.set_placeholder(self.username, "Username")
 
-        self.username.pack(fill="x", padx=40, ipady=8, pady=(5, 20))
+        # ---- Input Password ----
+        password_frame = tk.Frame(
+            card_form, bg="#F8FAFC",
+            highlightbackground="#E2E8F0",
+            highlightthickness=1
+        )
+        password_frame.pack(fill=tk.X, pady=6, ipady=4)
 
-        # ==========================
-        # Password
-        # ==========================
-
-        Label(
-            card, text="Password", bg="white", font=("Segoe UI", 10, "bold"), anchor="w"
-        ).pack(fill="x", padx=40)
-
-        password_frame = Frame(card, bg="white")
-        password_frame.pack(fill="x", padx=40, pady=(5, 25))
-
-        self.password = Entry(password_frame, show="*", font=("Segoe UI", 11))
-
-        self.password.pack(side=LEFT, fill="x", expand=True, ipady=8)
-
-        # Status password
-        self.show_password = False
-
-        # Tombol mata
-        self.toggle_btn = Button(
+        self.password = tk.Entry(
             password_frame,
-            text="👁",
-            font=("Segoe UI Emoji", 11),
-            bg="white",
+            font=("Arial", 11),
+            bg="#F8FAFC",
+            bd=0,
+            fg="#0F172A",
+            insertbackground="#0F172A",
+        )
+        self.password.pack(fill=tk.X, padx=10, pady=5)
+        self.set_placeholder(self.password, "Password", is_password=True)
+
+        # ---- Tombol Register ----
+        register_btn = tk.Button(
+            card_form,
+            text="Register",
+            font=("Arial", 11, "bold"),
+            bg="#1A5CFF",
+            fg="#FFFFFF",
+            activebackground="#0046E5",
+            activeforeground="#FFFFFF",
             bd=0,
             cursor="hand2",
-            activebackground="white",
-            command=self.toggle_password,
-        )
-
-        self.toggle_btn.pack(side=RIGHT, padx=(8, 0))
-
-        # ==========================
-        # Button Register
-        # ==========================
-
-        Button(
-            card,
-            text="DAFTAR",
-            bg=PRIMARY,
-            fg="white",
-            relief="flat",
-            cursor="hand2",
-            font=("Segoe UI", 11, "bold"),
             command=self.register,
-        ).pack(fill="x", padx=40, ipady=8)
+        )
+        register_btn.pack(fill=tk.X, pady=(20, 15), ipady=6)
 
-        Button(
-            card,
-            text="Sudah punya akun? Login",
-            bg="white",
-            fg=PRIMARY,
-            relief="flat",
+        # ---- Navigasi Kembali ke Login ----
+        login_container = tk.Frame(card_form, bg="#FFFFFF")
+        login_container.pack(pady=5)
+
+        has_account_label = tk.Label(
+            login_container,
+            text="Sudah punya akun? ",
+            font=("Arial", 10),
+            fg="#64748B",
+            bg="#FFFFFF",
+        )
+        has_account_label.pack(side=tk.LEFT)
+
+        login_link = tk.Label(
+            login_container,
+            text="Login",
+            font=("Arial", 10, "bold"),
+            fg="#1A5CFF",
+            bg="#FFFFFF",
             cursor="hand2",
-            font=("Segoe UI", 10),
-            command=self.master.show_login,
-        ).pack(pady=15)
+        )
+        login_link.pack(side=tk.LEFT)
+        login_link.bind("<Button-1>", lambda e: master.show_login())
 
-    # ==========================
-    # Toggle Password
-    # ==========================
+    # ==========================================
+    # LOGIC & PLACEHOLDER HELPER
+    # ==========================================
+    def set_placeholder(self, entry, text, is_password=False):
+        entry.insert(0, text)
+        entry.config(fg="#94A3B8")
 
-    def toggle_password(self):
+        def on_focus_in(event):
+            if entry.get() == text:
+                entry.delete(0, tk.END)
+                entry.config(fg="#0F172A")
+                if is_password:
+                    entry.config(show="*")
 
-        if self.show_password:
-            self.password.config(show="*")
-            self.toggle_btn.config(text="👁")
-            self.show_password = False
-        else:
-            self.password.config(show="")
-            self.toggle_btn.config(text="🙈")
-            self.show_password = True
+        def on_focus_out(event):
+            if not entry.get():
+                entry.insert(0, text)
+                entry.config(fg="#94A3B8")
+                if is_password:
+                    entry.config(show="")
 
-    # ==========================
-    # Register
-    # ==========================
+        entry.bind("<FocusIn>", on_focus_in)
+        entry.bind("<FocusOut>", on_focus_out)
 
     def register(self):
-
+        nama = self.nama.get().strip()
         username = self.username.get().strip()
-        password = self.password.get().strip()
+        password = self.password.get()
+        confirm_password = self.confirm_password.get()
 
-        if not username or not password:
+        if (
+            nama == "Nama Lengkap"
+            or username == "Username"
+            or password == "Password"
+            or confirm_password == "Konfirmasi Password"
+            or not nama
+            or not username
+            or not password
+        ):
             messagebox.showwarning("Peringatan", "Semua data harus diisi!")
             return
 
-        filename = "users.json"
+        if password != confirm_password:
+            messagebox.showwarning(
+                "Peringatan", "Password dan Konfirmasi Password tidak cocok!"
+            )
+            return
 
-        # Jika file belum ada, buat file kosong
-        if not os.path.exists(filename):
-            with open(filename, "w", encoding="utf-8") as file:
-                json.dump([], file)
+        sukses = self.user_model.register(nama, username, password, "pasien")
 
-        # Membaca data user
-        try:
-            with open(filename, "r", encoding="utf-8") as file:
-                users = json.load(file)
-        except json.JSONDecodeError:
-            users = []
-
-        # Cek username sudah ada atau belum
-        for user in users:
-            if user.get("username") == username:
-                messagebox.showerror("Gagal", "Username sudah digunakan!")
-                return
-
-        # Tambahkan user baru
-        users.append({"username": username, "password": password})
-
-        # Simpan kembali ke file JSON
-        with open(filename, "w", encoding="utf-8") as file:
-            json.dump(users, file, indent=4, ensure_ascii=False)
-
-        messagebox.showinfo("Berhasil", "Registrasi berhasil.")
-
-        self.master.show_login()
+        if sukses:
+            messagebox.showinfo("Berhasil", "Registrasi berhasil.")
+            self.master.show_login()
+        else:
+            messagebox.showerror("Error", "Username sudah digunakan.")

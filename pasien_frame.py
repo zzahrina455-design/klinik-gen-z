@@ -1,148 +1,363 @@
-from tkinter import *
+import tkinter as tk
 from tkinter import ttk, messagebox
+from models import AntrianModel, NotifikasiModel
+from survey_frame import SurveyFrame
 
-from database import Database
 
+class PasienFrame(tk.Frame):
 
-class PasienFrame(Frame):
+    def __init__(self, master, user):
+        super().__init__(master, bg="#F8FAFC")
+        self.pack(fill=tk.BOTH, expand=True)
 
-    def __init__(self, master):
-        super().__init__(master)
-        self.pack(fill="both", expand=True)
+        self.master = master
+        self.user = user
+        self.nama_pasien = user[1]
 
-        self.db = Database()
-        self.selected_id = None
+        self.antrian_model = AntrianModel()
+        self.notifikasi_model = NotifikasiModel()
+        self.nomor_antrian = "-"
 
-        Label(self, text="DATA PASIEN",
-              font=("Arial", 18, "bold")).pack(pady=10)
+        # Struktur Grid Utama: Kolom 0 (Sidebar), Kolom 1 (Konten Utama)
+        self.grid_columnconfigure(0, weight=0)
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_rowconfigure(0, weight=1)
 
-        Label(self, text="Nama")
-        self.nama = Entry(self, width=35)
-        self.nama.pack()
+        self.buat_sidebar()
+        self.buat_konten_antrian()
+        self.load_notifikasi()
 
-        Label(self, text="Umur")
-        self.umur = Entry(self, width=35)
-        self.umur.pack()
-
-        Label(self, text="Alamat")
-        self.alamat = Entry(self, width=35)
-        self.alamat.pack()
-
-        Button(self, text="Tambah",
-               command=self.tambah).pack(pady=5)
-
-        Button(self, text="Update",
-               command=self.update).pack(pady=5)
-
-        Button(self, text="Hapus",
-               command=self.hapus).pack(pady=5)
-
-        self.tree = ttk.Treeview(
+    # ======================================================
+    # SIDEBAR NAVIGASI (Sisi Kiri)
+    # ======================================================
+    def buat_sidebar(self):
+        sidebar = tk.Frame(
             self,
-            columns=("ID", "Nama", "Umur", "Alamat"),
-            show="headings",
-            height=8
+            bg="#FFFFFF",
+            width=220,
+            highlightbackground="#E2E8F0",
+            highlightthickness=1,
         )
+        sidebar.grid(row=0, column=0, sticky="nsew")
+        sidebar.grid_propagate(False)  # Kunci lebar agar tidak menciut
 
-        self.tree.heading("ID", text="ID")
-        self.tree.heading("Nama", text="Nama")
-        self.tree.heading("Umur", text="Umur")
-        self.tree.heading("Alamat", text="Alamat")
-
-        self.tree.bind("<<TreeviewSelect>>", self.pilih_data)
-
-        self.tree.pack(pady=10)
-
-        Button(
-            self,
-            text="Kembali",
-            command=self.kembali
-        ).pack()
-
-        self.load_data()
-
-    def load_data(self):
-
-        for item in self.tree.get_children():
-            self.tree.delete(item)
-
-        data = self.db.fetchall(
-            "SELECT * FROM pasien"
+        # Nama Aplikasi di Atas Sidebar
+        app_title = tk.Label(
+            sidebar,
+            text="Klinik Gen-Z",
+            font=("Arial", 14, "bold"),
+            fg="#0F172A",
+            bg="#FFFFFF",
+            anchor="w",
         )
+        app_title.pack(fill=tk.X, padx=20, pady=25)
 
-        for row in data:
-            self.tree.insert("", END, values=row)
+        # Tombol-tombol Navigasi Menu
+        menus = [
+            ("🎟️  Antrian", "active"),
+            ("📝  Survei", self.buka_survey),
+            ("🚪  Keluar", self.master.show_login),
+        ]
 
-    def tambah(self):
+        for text, command in menus:
+            if command == "active":
+                # Tombol Aktif (Warna Biru Utama)
+                btn = tk.Button(
+                    sidebar,
+                    text=text,
+                    font=("Arial", 10, "bold"),
+                    bg="#1A5CFF",
+                    fg="#FFFFFF",
+                    activebackground="#1A5CFF",
+                    activeforeground="#FFFFFF",
+                    bd=0,
+                    anchor="w",
+                    padx=15,
+                    cursor="hand2",
+                )
+            else:
+                # Tombol Biasa (Warna Abu/Transparan)
+                btn = tk.Button(
+                    sidebar,
+                    text=text,
+                    font=("Arial", 10),
+                    bg="#FFFFFF",
+                    fg="#64748B",
+                    activebackground="#F1F5F9",
+                    activeforeground="#0F172A",
+                    bd=0,
+                    anchor="w",
+                    padx=15,
+                    cursor="hand2",
+                    command=command if command else lambda: None,
+                )
+            btn.pack(fill=tk.X, padx=15, pady=4, ipady=8)
 
-        self.db.execute(
-            "INSERT INTO pasien(nama,umur,alamat) VALUES(?,?,?)",
-            (
-                self.nama.get(),
-                self.umur.get(),
-                self.alamat.get()
-            )
+    # ======================================================
+    # KONTEN UTAMA: PENDAFTARAN ANTRIAN (Sisi Kanan)
+    # ======================================================
+    def buat_konten_antrian(self):
+        # Container utama sisi kanan
+        main_content = tk.Frame(self, bg="#F8FAFC", padx=35, pady=25)
+        main_content.grid(row=0, column=1, sticky="nsew")
+        main_content.grid_columnconfigure(0, weight=3)
+        main_content.grid_columnconfigure(1, weight=2)
+        main_content.grid_rowconfigure(1, weight=1)
+
+        # 1. Header Halaman
+        header_title = tk.Label(
+            main_content,
+            text="Pendaftaran Antrian",
+            font=("Arial", 18, "bold"),
+            fg="#0F172A",
+            bg="#F8FAFC",
         )
+        header_title.grid(
+            row=0,
+            column=0,
+            columnspan=2,
+            sticky="w",
+            pady=(0, 20))
 
-        messagebox.showinfo("Berhasil", "Data berhasil ditambahkan")
+        # 2. Sisi Kiri Konten: Form Input Isian
+        form_frame = tk.Frame(main_content, bg="#F8FAFC")
+        form_frame.grid(row=1, column=0, sticky="nsew", padx=(0, 25))
 
-        self.load_data()
+        # Field Nama Pasien (Membaca nama user otomatis)
+        tk.Label(
+            form_frame,
+            text="Nama Pasien",
+            font=("Arial", 10, "bold"),
+            fg="#334155",
+            bg="#F8FAFC",
+        ).pack(anchor="w", pady=(5, 2))
+        name_wrapper = tk.Frame(
+            form_frame,
+            bg="#FFFFFF",
+            highlightbackground="#E2E8F0",
+            highlightthickness=1,
+        )
+        name_wrapper.pack(fill=tk.X, pady=(0, 15), ipady=4)
+        lbl_nama = tk.Label(
+            name_wrapper,
+            text=self.nama_pasien,
+            font=("Arial", 11),
+            fg="#0F172A",
+            bg="#FFFFFF",
+            anchor="w",
+        )
+        lbl_nama.pack(fill=tk.X, padx=10, pady=4)
 
-    def pilih_data(self, event):
+        # Field Pilihan Poli / Layanan
+        tk.Label(
+            form_frame,
+            text="Poli / Layanan",
+            font=("Arial", 10, "bold"),
+            fg="#334155",
+            bg="#F8FAFC",
+        ).pack(anchor="w", pady=(5, 2))
 
-        data = self.tree.focus()
+        # Styling Combobox Tkinter agar lebih minimalis
+        self.combo_poli = ttk.Combobox(
+            form_frame,
+            font=("Arial", 11),
+            state="readonly")
+        self.combo_poli["values"] = (
+            "Poli Umum",
+            "Poli Gigi",
+            "Poli Anak",
+            "Poli Kandungan",
+            "Poli Mata",
+        )
+        self.combo_poli.current(0)
+        self.combo_poli.pack(fill=tk.X, pady=(0, 15))
 
-        if data:
+        # Field Tanggal Kunjungan (Dummy default hari ini)
+        tk.Label(
+            form_frame,
+            text="Tanggal",
+            font=("Arial", 10, "bold"),
+            fg="#334155",
+            bg="#F8FAFC",
+        ).pack(anchor="w", pady=(5, 2))
+        date_wrapper = tk.Frame(
+            form_frame,
+            bg="#FFFFFF",
+            highlightbackground="#E2E8F0",
+            highlightthickness=1,
+        )
+        date_wrapper.pack(fill=tk.X, pady=(0, 15), ipady=4)
+        lbl_date = tk.Label(
+            date_wrapper,
+            text="06/07/2026",
+            font=("Arial", 11),
+            fg="#0F172A",
+            bg="#FFFFFF",
+            anchor="w",
+        )
+        lbl_date.pack(fill=tk.X, padx=10, pady=4)
 
-            values = self.tree.item(data)["values"]
+        # Field Keluhan (Menggunakan Text widget tipis menggantikan entry lama)
+        tk.Label(
+            form_frame,
+            text="Keluhan",
+            font=("Arial", 10, "bold"),
+            fg="#334155",
+            bg="#F8FAFC",
+        ).pack(anchor="w", pady=(5, 2))
+        self.txt_keluhan = tk.Text(
+            form_frame,
+            font=("Arial", 11),
+            height=4,
+            bg="#FFFFFF",
+            highlightbackground="#E2E8F0",
+            highlightthickness=1,
+            bd=0,
+        )
+        self.txt_keluhan.pack(fill=tk.X, pady=(0, 20), padx=1)
 
-            self.selected_id = values[0]
+        # Tombol Submit Antrian
+        btn_submit = tk.Button(
+            form_frame,
+            text="👤 Daftar Antrian",
+            font=("Arial", 11, "bold"),
+            bg="#1A5CFF",
+            fg="#FFFFFF",
+            activebackground="#0046E5",
+            activeforeground="#FFFFFF",
+            bd=0,
+            cursor="hand2",
+            command=self.ambil_antrian,
+        )
+        btn_submit.pack(fill=tk.X, ipady=6)
 
-            self.nama.delete(0, END)
-            self.umur.delete(0, END)
-            self.alamat.delete(0, END)
+        # 3. Sisi Kanan Konten: Panel Realtime Antrian Hari Ini
+        queue_panel = tk.Frame(
+            main_content,
+            bg="#FFFFFF",
+            highlightbackground="#E2E8F0",
+            highlightthickness=1,
+            padx=20,
+            pady=20,
+        )
+        queue_panel.grid(row=1, column=1, sticky="nsew")
 
-            self.nama.insert(0, values[1])
-            self.umur.insert(0, values[2])
-            self.alamat.insert(0, values[3])
+        panel_title = tk.Label(
+            queue_panel,
+            text="Antrian Hari Ini",
+            font=("Arial", 12, "bold"),
+            fg="#0F172A",
+            bg="#FFFFFF",
+        )
+        panel_title.pack(anchor="w", pady=(0, 15))
 
-    def update(self):
+        # Container list notifikasi / antrian (Pengganti listbox kaku)
+        self.queue_container = tk.Frame(queue_panel, bg="#FFFFFF")
+        self.queue_container.pack(fill=tk.BOTH, expand=True)
 
-        if self.selected_id is None:
+        self.lbl_nomor = tk.Label(
+            queue_panel,
+            text="Antrian Anda: -",
+            font=("Arial", 11, "bold"),
+            fg="#1A5CFF",
+            bg="#EBF1FA",
+            pady=8,
+        )
+        self.lbl_nomor.pack(fill=tk.X, side=tk.BOTTOM)
+
+    # ======================================================
+    # LOGIC & COMPONENT UPDATE FUNCTION
+    # ======================================================
+    def buka_survey(self):
+        SurveyFrame(self.master, self.nama_pasien)
+
+    def ambil_antrian(self):
+        aktif = self.antrian_model.antrian_aktif(self.nama_pasien)
+        if aktif:
+            messagebox.showwarning(
+                "Peringatan", "Anda masih memiliki antrian aktif."
+                )
             return
 
-        self.db.execute(
-            "UPDATE pasien SET nama=?,umur=?,alamat=? WHERE id=?",
-            (
-                self.nama.get(),
-                self.umur.get(),
-                self.alamat.get(),
-                self.selected_id
+        poli = self.combo_poli.get()
+        nomor = self.antrian_model.ambil_nomor(self.nama_pasien, poli)
+        self.nomor_antrian = nomor
+
+        formatted_antrian = f"A{nomor:03}"
+        self.lbl_nomor.config(
+            text=f"Antrian Anda: {formatted_antrian} ({poli})"
             )
+
+        pesan = (
+            f"Nomor antrian Anda {formatted_antrian} "
+            f"untuk {poli}. "
+            "Silakan menunggu panggilan."
         )
+        self.notifikasi_model.tambah(self.nama_pasien, pesan)
 
-        messagebox.showinfo("Berhasil", "Data berhasil diubah")
+        messagebox.showinfo("Berhasil", pesan)
+        self.load_notifikasi()
 
-        self.load_data()
+    def load_notifikasi(self):
+        # Bersihkan container lama
+        for widget in self.queue_container.winfo_children():
+            widget.destroy()
 
-    def hapus(self):
+        data = self.notifikasi_model.semua(self.nama_pasien)
 
-        if self.selected_id is None:
+        if len(data) == 0:
+            lbl_empty = tk.Label(
+                self.queue_container,
+                text="Belum ada antrian terdaftar.",
+                font=("Arial", 10),
+                fg="#94A3B8",
+                bg="#FFFFFF",
+            )
+            lbl_empty.pack(pady=20)
             return
 
-        self.db.execute(
-            "DELETE FROM pasien WHERE id=?",
-            (self.selected_id,)
-        )
+        for item in data[:3]:
+            # Membuat Box Card komponen melengkung tipis
+            card = tk.Frame(self.queue_container,
+                            bg="#F1F5F9",
+                            padx=12,
+                            pady=10)
+            card.pack(fill=tk.X, pady=5)
 
-        messagebox.showinfo("Berhasil", "Data berhasil dihapus")
+            # Badge Angka Antrian (Sisi Kiri Card)
+            badge_num = tk.Label(
+                card,
+                text=f"A00{item[0]}",
+                font=("Arial", 11, "bold"),
+                fg="#1A5CFF",
+                bg="#EBF1FA",
+                padx=6,
+                pady=3,
+            )
+            badge_num.pack(side=tk.LEFT, padx=(0, 10))
 
-        self.load_data()
+            # Info Detail Teks (Sisi Kanan Card)
+            text_frame = tk.Frame(card, bg="#F1F5F9")
+            text_frame.pack(side=tk.LEFT, fill=tk.X)
 
-    def kembali(self):
+            lbl_user = tk.Label(
+                text_frame,
+                text=self.nama_pasien,
+                font=("Arial", 10, "bold"),
+                fg="#0F172A",
+                bg="#F1F5F9",
+                anchor="w",
+            )
+            lbl_user.pack(anchor="w")
 
-        self.master.clear_frame()
-
-        from dashboard_frame import DashboardFrame
-
-        DashboardFrame(self.master)
+            # Mengambil nama poli dari string pesan notifikasi
+            poli_name = self.combo_poli.get()
+            lbl_poli = tk.Label(
+                text_frame,
+                text=poli_name,
+                font=("Arial", 9),
+                fg="#64748B",
+                bg="#F1F5F9",
+                anchor="w",
+            )
+            lbl_poli.pack(anchor="w")
