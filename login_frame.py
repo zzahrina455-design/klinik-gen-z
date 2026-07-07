@@ -86,7 +86,7 @@ class LoginFrame(tk.Frame):
         # ---- Input Username ----
         # Frame pembungkus entry agar bisa diberi border/padding custom
         username_frame = tk.Frame(
-            card_form, bg="#FFFFFF",
+            card_form, bg="#000000",
             highlightbackground="#000000",
             highlightthickness=1
         )
