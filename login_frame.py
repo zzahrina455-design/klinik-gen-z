@@ -6,7 +6,7 @@ from models import UserModel
 class LoginFrame(tk.Frame):
 
     def __init__(self, master):
-        super().__init__(master, bg="#91BDFF")
+        super().__init__(master, bg="#B8D3FC")
         self.pack(fill=tk.BOTH, expand=True)
 
         self.user_model = UserModel()
@@ -19,7 +19,7 @@ class LoginFrame(tk.Frame):
         # ==========================================
         # SISI KIRI: LOGO & JUDUL KLINIK
         # ==========================================
-        left_container = tk.Frame(self, bg="#91BDFF")
+        left_container = tk.Frame(self, bg="#B8D3FC")
         left_container.grid(row=0, column=0, sticky="nsew", padx=50)
         left_container.grid_rowconfigure((0, 1, 2, 3), weight=1)
         left_container.grid_columnconfigure(0, weight=1)
@@ -31,7 +31,7 @@ class LoginFrame(tk.Frame):
             text="✚",
             font=("Arial", 64, "bold"),
             fg="#1A5CFF",
-            bg="#91BDFF",
+            bg="#B8D3FC",
         )
         logo_label.grid(row=1, column=0, sticky="s", pady=10)
 
@@ -41,7 +41,7 @@ class LoginFrame(tk.Frame):
             text="KLINIK GEN-Z",
             font=("Arial", 28, "bold"),
             fg="#0F172A",
-            bg="#91BDFF",
+            bg="#B8D3FC",
         )
         title_label.grid(row=2, column=0, sticky="n")
 
@@ -51,7 +51,7 @@ class LoginFrame(tk.Frame):
             text="Sistem Manajemen\nData Pasien",
             font=("Arial", 14),
             fg="#64748B",
-            bg="#91BDFF",
+            bg="#B8D3FC",
             justify="center",
         )
         subtitle_label.grid(row=2, column=0, sticky="n", pady=60)
@@ -60,8 +60,8 @@ class LoginFrame(tk.Frame):
         # SISI KANAN: CARD CONTAINER (FORM LOGIN)
         # ==========================================
         # Frame putih sebagai wadah form (Card background)
-        card_form = tk.Frame(self, bg="#CFE6FD", padx=40, pady=40)
-        card_form.grid(row=0, column=1, padx=60, pady=60, sticky="nsew")
+        card_form = tk.Frame(self, bg="#F9F9F9", padx=40, pady=40)
+        card_form.grid(row=0, column=1, padx=60, pady=110, sticky="nsew")
         card_form.grid_columnconfigure(0, weight=1)
 
         # Header di dalam Card
@@ -78,19 +78,19 @@ class LoginFrame(tk.Frame):
             card_form,
             text="Silakan masuk ke akun Anda",
             font=("Arial", 10),
-            fg="#94A3B8",
-            bg="#FFFFFF",
+            fg="#000000",
+            bg="#F9F9F9",
         )
         login_subtitle.pack(pady=(0, 25))
 
         # ---- Input Username ----
         # Frame pembungkus entry agar bisa diberi border/padding custom
         username_frame = tk.Frame(
-            card_form, bg="#F8FAFC",
-            highlightbackground="#E2E8F0",
+            card_form, bg="#FFFFFF",
+            highlightbackground="#000000",
             highlightthickness=1
         )
-        username_frame.pack(fill=tk.X, pady=8, ipady=5)
+        username_frame.pack(fill=tk.X, pady=5, ipady=5)
 
         # Icon/Label teks mini di dalam Entry (atau pakai placeholder)
         self.username = tk.Entry(
@@ -101,7 +101,7 @@ class LoginFrame(tk.Frame):
             fg="#0F172A",
             insertbackground="#0F172A",
         )
-        self.username.pack(fill=tk.X, padx=10, pady=5)
+        self.username.pack(fill=tk.X, padx=8, pady=5)
         self.set_placeholder(self.username, "Username")
 
         # ---- Input Password ----
@@ -110,7 +110,7 @@ class LoginFrame(tk.Frame):
             highlightbackground="#E2E8F0",
             highlightthickness=1
         )
-        password_frame.pack(fill=tk.X, pady=8, ipady=5)
+        password_frame.pack(fill=tk.X, pady=5, ipady=5)
 
         self.password = tk.Entry(
             password_frame,
@@ -120,7 +120,7 @@ class LoginFrame(tk.Frame):
             fg="#0F172A",
             insertbackground="#0F172A",
         )
-        self.password.pack(fill=tk.X, padx=10, pady=5)
+        self.password.pack(fill=tk.X, padx=8, pady=5)
         self.set_placeholder(self.password, "Password", is_password=True)
 
         # ---- Tombol Login ----
@@ -136,7 +136,7 @@ class LoginFrame(tk.Frame):
             cursor="hand2",
             command=self.login,
         )
-        login_btn.pack(fill=tk.X, pady=(15, 20), ipady=6)
+        login_btn.pack(fill=tk.X, pady=(15, 15), ipady=6)
 
         # ---- Navigasi Register (Teks Bawah) ----
         register_container = tk.Frame(card_form, bg="#FFFFFF")
