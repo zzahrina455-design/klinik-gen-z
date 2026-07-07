@@ -7,7 +7,7 @@ class DokterFrame(tk.Frame):
 
     def __init__(self, master, user):
         # Menginisialisasi frame dengan warna latar belakang modern yang bersih
-        super().__init__(master, bg="#F8FAFC")
+        super().__init__(master, bg="#B8D3FC")
 
         self.master = master
         self.user = user

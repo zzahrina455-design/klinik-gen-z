@@ -7,7 +7,7 @@ class AdminFrame(tk.Frame):
 
     def __init__(self, master, user):
         # Menginisialisasi induk frame utama
-        super().__init__(master, bg="#F8FAFC")
+        super().__init__(master, bg="#B8D3FC")
 
         self.master = master
         self.user = user

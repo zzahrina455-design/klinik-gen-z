@@ -205,31 +205,39 @@ class RegisterFrame(tk.Frame):
     def register(self):
         nama = self.nama.get().strip()
         username = self.username.get().strip()
-        password = self.password.get()
-        confirm_password = self.confirm_password.get()
+        password = self.password.get().strip()
 
+        # Validasi input
         if (
             nama == "Nama Lengkap"
             or username == "Username"
             or password == "Password"
-            or confirm_password == "Konfirmasi Password"
             or not nama
             or not username
             or not password
         ):
-            messagebox.showwarning("Peringatan", "Semua data harus diisi!")
-            return
-
-        if password != confirm_password:
             messagebox.showwarning(
-                "Peringatan", "Password dan Konfirmasi Password tidak cocok!"
+                "Peringatan",
+                "Semua data harus diisi!"
             )
             return
 
-        sukses = self.user_model.register(nama, username, password, "pasien")
+        # Simpan data ke database
+        sukses = self.user_model.register(
+            nama,
+            username,
+            password,
+            "pasien"
+        )
 
         if sukses:
-            messagebox.showinfo("Berhasil", "Registrasi berhasil.")
+            messagebox.showinfo(
+                "Berhasil",
+                "Registrasi berhasil."
+            )
             self.master.show_login()
         else:
-            messagebox.showerror("Error", "Username sudah digunakan.")
+            messagebox.showerror(
+                "Error",
+                "Username sudah digunakan!"
+            )
