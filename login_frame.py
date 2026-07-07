@@ -139,7 +139,7 @@ class LoginFrame(tk.Frame):
         login_btn.pack(fill=tk.X, pady=(15, 15), ipady=6)
 
         # ---- Navigasi Register (Teks Bawah) ----
-        register_container = tk.Frame(card_form, bg="#FFFFFF")
+        register_container = tk.Frame(card_form, bg="#F9F9F9")
         register_container.pack(pady=10)
 
         no_account_label = tk.Label(
