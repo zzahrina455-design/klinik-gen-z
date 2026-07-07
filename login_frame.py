@@ -25,7 +25,6 @@ class LoginFrame(tk.Frame):
         left_container.grid_columnconfigure(0, weight=1)
 
         # Placeholder Simbol Plus/Logo Besar
-        # Catatan: Jika ada gambar asli, gunakan tk.PhotoImage
         logo_label = tk.Label(
             left_container,
             text="✚",
@@ -59,8 +58,7 @@ class LoginFrame(tk.Frame):
         # ==========================================
         # SISI KANAN: CARD CONTAINER (FORM LOGIN)
         # ==========================================
-        # Frame putih sebagai wadah form (Card background)
-        card_form = tk.Frame(self, bg="#F9F9F9", padx=40, pady=40, width=400)
+        card_form = tk.Frame(self, bg="#F9F9F9", padx=40, pady=40, width=360)
         card_form.grid(row=0, column=1, padx=60, pady=110, sticky="nsew")
         card_form.grid_columnconfigure(0, weight=1)
         card_form.grid_propagate(False)
@@ -85,16 +83,14 @@ class LoginFrame(tk.Frame):
         login_subtitle.pack(pady=(0, 25))
 
         # ---- Input Username ----
-        # Frame pembungkus entry agar bisa diberi border/padding custom
         username_frame = tk.Frame(
             card_form,
             bg="#F9F9F9",
             highlightbackground="#000000",
             highlightthickness=1
         )
-        username_frame.pack(fill=tk.X, pady=5, ipady=5)
+        username_frame.pack(fill=tk.NONE, pady=5, ipady=5)
 
-        # Icon/Label teks mini di dalam Entry (atau pakai placeholder)
         self.username = tk.Entry(
             username_frame,
             font=("Arial", 11),
@@ -117,7 +113,7 @@ class LoginFrame(tk.Frame):
         self.password = tk.Entry(
             password_frame,
             font=("Arial", 11),
-            bg="#F8FAFC",
+            bg="#F9F9F9",
             bd=0,
             fg="#000000",
             insertbackground="#0F172A",
@@ -130,7 +126,7 @@ class LoginFrame(tk.Frame):
             card_form,
             text="Login",
             font=("Arial", 11, "bold"),
-            bg="#1A5CFF",  # Biru menyesuaikan mockup
+            bg="#1A5CFF",
             fg="#FFFFFF",
             activebackground="#0046E5",
             activeforeground="#FFFFFF",
@@ -141,7 +137,7 @@ class LoginFrame(tk.Frame):
         login_btn.pack(fill=tk.X, pady=(15, 15), ipady=6)
 
         # ---- Navigasi Register (Teks Bawah) ----
-        register_container = tk.Frame(card_form, bg="#FFFFFF")
+        register_container = tk.Frame(card_form, bg="#F9F9F9")
         register_container.pack(pady=10)
 
         no_account_label = tk.Label(
@@ -168,7 +164,6 @@ class LoginFrame(tk.Frame):
     # LOGIC & PLACEHOLDER HELPER
     # ==========================================
     def set_placeholder(self, entry, text, is_password=False):
-        """Fungsi pembantu untuk membuat efek placeholder tulisan samar"""
         entry.insert(0, text)
         entry.config(fg="#525252")
 
@@ -200,8 +195,7 @@ class LoginFrame(tk.Frame):
             or not password
         ):
             messagebox.showwarning(
-                "Peringatan", "Username dan Password harus diisi!"
-                )
+                "Peringatan", "Username dan Password harus diisi!")
             return
 
         user = self.user_model.login(username, password)
