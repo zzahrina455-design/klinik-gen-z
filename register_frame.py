@@ -237,7 +237,4 @@ class RegisterFrame(tk.Frame):
             )
             self.master.show_login()
         else:
-            messagebox.showerror(
-                "Error",
-                "Username sudah digunakan!"
-            )
+            messagebox.showerror("Error", "Username sudah digunakan!")
