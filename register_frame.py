@@ -7,7 +7,7 @@ class RegisterFrame(tk.Frame):
 
     def __init__(self, master):
         # Menggunakan warna background utama yang sama dengan login
-        super().__init__(master, bg="#EBF1FA")
+        super().__init__(master, bg="#B8D3FC")
         self.pack(fill=tk.BOTH, expand=True)
 
         self.user_model = UserModel()
@@ -20,7 +20,7 @@ class RegisterFrame(tk.Frame):
         # ==========================================
         # SISI KIRI: LOGO & JUDUL KLINIK (Sama dengan Login)
         # ==========================================
-        left_container = tk.Frame(self, bg="#EBF1FA")
+        left_container = tk.Frame(self, bg="#B8D3FC")
         left_container.grid(row=0, column=0, sticky="nsew", padx=50)
         left_container.grid_rowconfigure((0, 1, 2, 3), weight=1)
         left_container.grid_columnconfigure(0, weight=1)
@@ -31,7 +31,7 @@ class RegisterFrame(tk.Frame):
             text="✚",
             font=("Arial", 64, "bold"),
             fg="#1A5CFF",
-            bg="#EBF1FA",
+            bg="#B8D3FC",
         )
         logo_label.grid(row=1, column=0, sticky="s", pady=10)
 
@@ -41,7 +41,7 @@ class RegisterFrame(tk.Frame):
             text="KLINIK GEN-Z",
             font=("Arial", 28, "bold"),
             fg="#0F172A",
-            bg="#EBF1FA",
+            bg="#B8D3FC",
         )
         title_label.grid(row=2, column=0, sticky="n")
 
@@ -51,7 +51,7 @@ class RegisterFrame(tk.Frame):
             text="Sistem Manajemen\nData Pasien",
             font=("Arial", 14),
             fg="#64748B",
-            bg="#EBF1FA",
+            bg="#B8D3FC",
             justify="center",
         )
         subtitle_label.grid(row=2, column=0, sticky="n", pady=60)
@@ -59,8 +59,8 @@ class RegisterFrame(tk.Frame):
         # ==========================================
         # SISI KANAN: CARD CONTAINER (FORM REGISTER)
         # ==========================================
-        card_form = tk.Frame(self, bg="#FFFFFF", padx=40, pady=30)
-        card_form.grid(row=0, column=1, padx=60, pady=40, sticky="nsew")
+        card_form = tk.Frame(self, bg="#F9F9F9", padx=40, pady=30)
+        card_form.grid(row=0, column=1, padx=60, pady=120, sticky="nsew")
         card_form.grid_columnconfigure(0, weight=1)
 
         # Header di dalam Card
@@ -69,7 +69,7 @@ class RegisterFrame(tk.Frame):
             text="Register",
             font=("Arial", 22, "bold"),
             fg="#0F172A",
-            bg="#FFFFFF",
+            bg="#F9F9F9",
         )
         register_title.pack(pady=(10, 5))
 
@@ -77,15 +77,15 @@ class RegisterFrame(tk.Frame):
             card_form,
             text="Buat akun baru",
             font=("Arial", 10),
-            fg="#94A3B8",
-            bg="#FFFFFF",
+            fg="#000000",
+            bg="#F9F9F9",
         )
         register_subtitle.pack(pady=(0, 20))
 
         # ---- Input Nama Lengkap ----
         nama_frame = tk.Frame(
-            card_form, bg="#F8FAFC",
-            highlightbackground="#E2E8F0",
+            card_form, bg="#F9F9F9",
+            highlightbackground="#000000",
             highlightthickness=1
         )
         nama_frame.pack(fill=tk.X, pady=6, ipady=4)
@@ -93,7 +93,7 @@ class RegisterFrame(tk.Frame):
         self.nama = tk.Entry(
             nama_frame,
             font=("Arial", 11),
-            bg="#F8FAFC",
+            bg="#F9F9F9",
             bd=0,
             fg="#0F172A",
             insertbackground="#0F172A",
@@ -103,8 +103,8 @@ class RegisterFrame(tk.Frame):
 
         # ---- Input Username ----
         username_frame = tk.Frame(
-            card_form, bg="#F8FAFC",
-            highlightbackground="#E2E8F0",
+            card_form, bg="#F9F9F9",
+            highlightbackground="#000000",
             highlightthickness=1
         )
         username_frame.pack(fill=tk.X, pady=6, ipady=4)
@@ -112,7 +112,7 @@ class RegisterFrame(tk.Frame):
         self.username = tk.Entry(
             username_frame,
             font=("Arial", 11),
-            bg="#F8FAFC",
+            bg="#F9F9F9",
             bd=0,
             fg="#0F172A",
             insertbackground="#0F172A",
@@ -122,8 +122,8 @@ class RegisterFrame(tk.Frame):
 
         # ---- Input Password ----
         password_frame = tk.Frame(
-            card_form, bg="#F8FAFC",
-            highlightbackground="#E2E8F0",
+            card_form, bg="#F9F9F9",
+            highlightbackground="#000000",
             highlightthickness=1
         )
         password_frame.pack(fill=tk.X, pady=6, ipady=4)
@@ -131,7 +131,7 @@ class RegisterFrame(tk.Frame):
         self.password = tk.Entry(
             password_frame,
             font=("Arial", 11),
-            bg="#F8FAFC",
+            bg="#F9F9F9",
             bd=0,
             fg="#0F172A",
             insertbackground="#0F172A",
@@ -163,7 +163,7 @@ class RegisterFrame(tk.Frame):
             text="Sudah punya akun? ",
             font=("Arial", 10),
             fg="#64748B",
-            bg="#FFFFFF",
+            bg="#F9F9F9",
         )
         has_account_label.pack(side=tk.LEFT)
 
@@ -172,7 +172,7 @@ class RegisterFrame(tk.Frame):
             text="Login",
             font=("Arial", 10, "bold"),
             fg="#1A5CFF",
-            bg="#FFFFFF",
+            bg="#F9F9F9",
             cursor="hand2",
         )
         login_link.pack(side=tk.LEFT)
@@ -183,7 +183,7 @@ class RegisterFrame(tk.Frame):
     # ==========================================
     def set_placeholder(self, entry, text, is_password=False):
         entry.insert(0, text)
-        entry.config(fg="#94A3B8")
+        entry.config(fg="#525252")
 
         def on_focus_in(event):
             if entry.get() == text:
@@ -195,7 +195,7 @@ class RegisterFrame(tk.Frame):
         def on_focus_out(event):
             if not entry.get():
                 entry.insert(0, text)
-                entry.config(fg="#94A3B8")
+                entry.config(fg="#000000")
                 if is_password:
                     entry.config(show="")
 

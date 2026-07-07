@@ -15,7 +15,7 @@ class MainApp(tk.Tk):
         super().__init__()
 
         self.title("KLINIK GEN-Z")
-        self.geometry("1200x700")
+        self.geometry("1000x700")
         self.resizable(False, False)
 
         # Mengatur konfigurasi grid pada MainApp (Window Utama)
