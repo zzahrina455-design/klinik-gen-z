@@ -70,7 +70,7 @@ class LoginFrame(tk.Frame):
             text="Login",
             font=("Arial", 22, "bold"),
             fg="#0F172A",
-            bg="#FFFFFF",
+            bg="#F9F9F9",
         )
         login_title.pack(pady=(10, 5))
 
@@ -86,7 +86,7 @@ class LoginFrame(tk.Frame):
         # ---- Input Username ----
         # Frame pembungkus entry agar bisa diberi border/padding custom
         username_frame = tk.Frame(
-            card_form, bg="#FFFFFF",
+            card_form, bg="#F8FAFC",
             highlightbackground="#000000",
             highlightthickness=1
         )
@@ -147,7 +147,7 @@ class LoginFrame(tk.Frame):
             text="Belum punya akun? ",
             font=("Arial", 10),
             fg="#64748B",
-            bg="#FFFFFF",
+            bg="#F9F9F9",
         )
         no_account_label.pack(side=tk.LEFT)
 

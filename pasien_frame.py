@@ -7,7 +7,7 @@ from survey_frame import SurveyFrame
 class PasienFrame(tk.Frame):
 
     def __init__(self, master, user):
-        super().__init__(master, bg="#B8D3FC")
+        super().__init__(master, bg="#F8FAFC")
         self.pack(fill=tk.BOTH, expand=True)
 
         self.master = master
@@ -100,8 +100,8 @@ class PasienFrame(tk.Frame):
         # Container utama sisi kanan
         main_content = tk.Frame(self, bg="#F8FAFC", padx=35, pady=25)
         main_content.grid(row=0, column=1, sticky="nsew")
-        main_content.grid_columnconfigure(0, weight=1)
-        main_content.grid_columnconfigure(1, weight=1)
+        main_content.grid_columnconfigure(0, weight=3)
+        main_content.grid_columnconfigure(1, weight=2)
         main_content.grid_rowconfigure(1, weight=1)
 
         # 1. Header Halaman
@@ -112,9 +112,12 @@ class PasienFrame(tk.Frame):
             fg="#0F172A",
             bg="#F8FAFC",
         )
-        header_title.grid(row=0, column=0,
-                          columnspan=2, sticky="w",
-                          pady=(0, 20))
+        header_title.grid(
+            row=0,
+            column=0,
+            columnspan=2,
+            sticky="w",
+            pady=(0, 20))
 
         # 2. Sisi Kiri Konten: Form Input Isian
         form_frame = tk.Frame(main_content, bg="#F8FAFC")
@@ -156,7 +159,9 @@ class PasienFrame(tk.Frame):
 
         # Styling Combobox Tkinter agar lebih minimalis
         self.combo_poli = ttk.Combobox(
-            form_frame, font=("Arial", 11), state="readonly")
+            form_frame,
+            font=("Arial", 11),
+            state="readonly")
         self.combo_poli["values"] = (
             "Poli Umum",
             "Poli Gigi",
@@ -166,6 +171,31 @@ class PasienFrame(tk.Frame):
         )
         self.combo_poli.current(0)
         self.combo_poli.pack(fill=tk.X, pady=(0, 15))
+
+        # Field Tanggal Kunjungan (Dummy default hari ini)
+        tk.Label(
+            form_frame,
+            text="Tanggal",
+            font=("Arial", 10, "bold"),
+            fg="#334155",
+            bg="#F8FAFC",
+        ).pack(anchor="w", pady=(5, 2))
+        date_wrapper = tk.Frame(
+            form_frame,
+            bg="#FFFFFF",
+            highlightbackground="#E2E8F0",
+            highlightthickness=1,
+        )
+        date_wrapper.pack(fill=tk.X, pady=(0, 15), ipady=4)
+        lbl_date = tk.Label(
+            date_wrapper,
+            text="06/07/2026",
+            font=("Arial", 11),
+            fg="#0F172A",
+            bg="#FFFFFF",
+            anchor="w",
+        )
+        lbl_date.pack(fill=tk.X, padx=10, pady=4)
 
         # Field Keluhan (Menggunakan Text widget tipis menggantikan entry lama)
         tk.Label(
@@ -221,6 +251,10 @@ class PasienFrame(tk.Frame):
         )
         panel_title.pack(anchor="w", pady=(0, 15))
 
+        # Container list notifikasi / antrian (Pengganti listbox kaku)
+        self.queue_container = tk.Frame(queue_panel, bg="#FFFFFF")
+        self.queue_container.pack(fill=tk.BOTH, expand=True)
+
         self.lbl_nomor = tk.Label(
             queue_panel,
             text="Antrian Anda: -",
@@ -229,11 +263,7 @@ class PasienFrame(tk.Frame):
             bg="#EBF1FA",
             pady=8,
         )
-        self.lbl_nomor.pack(fill=tk.X, side=tk.BOTTOM, pady=(10, 0))
-
-        # Container list notifikasi / antrian (Pengganti listbox kaku)
-        self.queue_container = tk.Frame(queue_panel, bg="#FFFFFF")
-        self.queue_container.pack(fill=tk.BOTH, expand=True)
+        self.lbl_nomor.pack(fill=tk.X, side=tk.BOTTOM)
 
     # ======================================================
     # LOGIC & COMPONENT UPDATE FUNCTION
@@ -245,7 +275,8 @@ class PasienFrame(tk.Frame):
         aktif = self.antrian_model.antrian_aktif(self.nama_pasien)
         if aktif:
             messagebox.showwarning(
-                "Peringatan", "Anda masih memiliki antrian aktif.")
+                "Peringatan", "Anda masih memiliki antrian aktif."
+                )
             return
 
         poli = self.combo_poli.get()
@@ -254,7 +285,8 @@ class PasienFrame(tk.Frame):
 
         formatted_antrian = f"A{nomor:03}"
         self.lbl_nomor.config(
-            text=f"Antrian Anda: {formatted_antrian} ({poli})")
+            text=f"Antrian Anda: {formatted_antrian} ({poli})"
+            )
 
         pesan = (
             f"Nomor antrian Anda {formatted_antrian} "
@@ -299,14 +331,14 @@ class PasienFrame(tk.Frame):
                 font=("Arial", 11, "bold"),
                 fg="#1A5CFF",
                 bg="#EBF1FA",
-                width=6,
+                padx=6,
                 pady=3,
             )
             badge_num.pack(side=tk.LEFT, padx=(0, 10))
 
             # Info Detail Teks (Sisi Kanan Card)
             text_frame = tk.Frame(card, bg="#F1F5F9")
-            text_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+            text_frame.pack(side=tk.LEFT, fill=tk.X)
 
             lbl_user = tk.Label(
                 text_frame,
@@ -316,7 +348,7 @@ class PasienFrame(tk.Frame):
                 bg="#F1F5F9",
                 anchor="w",
             )
-            lbl_user.pack(fill=tk.X)
+            lbl_user.pack(anchor="w")
 
             # Mengambil nama poli dari string pesan notifikasi
             poli_name = self.combo_poli.get()
@@ -328,4 +360,4 @@ class PasienFrame(tk.Frame):
                 bg="#F1F5F9",
                 anchor="w",
             )
-            lbl_poli.pack(fill=tk.X)
+            lbl_poli.pack(anchor="w")
