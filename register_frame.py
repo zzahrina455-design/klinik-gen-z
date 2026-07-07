@@ -59,9 +59,9 @@ class RegisterFrame(tk.Frame):
         # ==========================================
         # SISI KANAN: CARD CONTAINER (FORM REGISTER)
         # ==========================================
-        card_form = tk.Frame(self, bg="#F9F9F9", padx=40, pady=30)
-        card_form.grid(row=0, column=1, padx=60, pady=120, sticky="nsew")
-        card_form.grid_columnconfigure(0, weight=1)
+        card_form = tk.Frame(self, bg="#F9F9F9", padx=40, pady=30, width=420)
+        card_form.grid(row=0, column=1, padx=20, pady=120, sticky="nsew")
+        card_form.grid_propagate(False)
 
         # Header di dalam Card
         register_title = tk.Label(

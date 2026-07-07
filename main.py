@@ -16,7 +16,7 @@ class MainApp(tk.Tk):
 
         self.title("KLINIK GEN-Z")
         self.geometry("1000x700")
-        self.resizable(False, False)
+        self.minsize(1100, 650)
 
         # Mengatur konfigurasi grid pada MainApp (Window Utama)
         # agar frame yang dimasukkan bisa mengisi penuh layar secara responsif

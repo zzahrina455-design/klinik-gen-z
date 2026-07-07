@@ -60,9 +60,10 @@ class LoginFrame(tk.Frame):
         # SISI KANAN: CARD CONTAINER (FORM LOGIN)
         # ==========================================
         # Frame putih sebagai wadah form (Card background)
-        card_form = tk.Frame(self, bg="#F9F9F9", padx=40, pady=40)
+        card_form = tk.Frame(self, bg="#F9F9F9", padx=40, pady=40, width=400)
         card_form.grid(row=0, column=1, padx=60, pady=110, sticky="nsew")
         card_form.grid_columnconfigure(0, weight=1)
+        card_form.grid_propagate(False)
 
         # Header di dalam Card
         login_title = tk.Label(
