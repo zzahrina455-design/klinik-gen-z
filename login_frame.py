@@ -74,6 +74,7 @@ class LoginFrame(tk.Frame):
         )
         login_title.pack(pady=(10, 5))
 
+        # login_subtitle statis diubah teks agar konsisten
         login_subtitle = tk.Label(
             card_form,
             text="Silakan masuk ke akun Anda",
@@ -112,6 +113,9 @@ class LoginFrame(tk.Frame):
         )
         password_frame.pack(fill=tk.X, pady=5, ipady=5)
 
+        # State awal untuk visibilitas password
+        self.password_visible = False
+
         self.password = tk.Entry(
             password_frame,
             font=("Arial", 11),
@@ -120,7 +124,22 @@ class LoginFrame(tk.Frame):
             fg="#0F172A",
             insertbackground="#0F172A",
         )
-        self.password.pack(fill=tk.X, padx=8, pady=5)
+        self.password.pack(side=tk.LEFT, fill=tk.X,
+                           expand=True, padx=(8, 0), pady=5)
+
+        # Tombol Mata untuk Show/Hide Password
+        self.eye_button = tk.Button(
+            password_frame,
+            text="🙈",
+            font=("Arial", 11),
+            bg="#F8FAFC",
+            activebackground="#F8FAFC",
+            bd=0,
+            cursor="hand2",
+            command=self.toggle_password
+        )
+        self.eye_button.pack(side=tk.RIGHT, padx=8)
+
         self.set_placeholder(self.password, "Password", is_password=True)
 
         # ---- Tombol Login ----
@@ -165,6 +184,20 @@ class LoginFrame(tk.Frame):
     # ==========================================
     # LOGIC & PLACEHOLDER HELPER
     # ==========================================
+    def toggle_password(self):
+        """Fungsi aksi untuk tombol mata melihat password"""
+        if self.password.get() == "Password":
+            return
+         
+        if self.password_visible:
+            self.password.config(show="")
+            self.eye_button.config(text="🙈")
+            self.password_visible = False
+        else:
+            self.password.config(show="")
+            self.eye_button.config(text="👁️")
+            self.password_visible = True
+
     def set_placeholder(self, entry, text, is_password=False):
         """Fungsi pembantu untuk membuat efek placeholder tulisan samar"""
         entry.insert(0, text)
@@ -175,7 +208,11 @@ class LoginFrame(tk.Frame):
                 entry.delete(0, tk.END)
                 entry.config(fg="#0F172A")
                 if is_password:
-                    entry.config(show="*")
+                    # Mengikuti state tombol mata saat ini ketika fokus masuk
+                    if self.password_visible:
+                        entry.config(show="")
+                    else:
+                        entry.config(show="*")
 
         def on_focus_out(event):
             if not entry.get():
@@ -199,7 +236,7 @@ class LoginFrame(tk.Frame):
         ):
             messagebox.showwarning(
                 "Peringatan", "Username dan Password harus diisi!"
-                )
+            )
             return
 
         user = self.user_model.login(username, password)
