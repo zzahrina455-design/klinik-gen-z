@@ -172,31 +172,6 @@ class PasienFrame(tk.Frame):
         self.combo_poli.current(0)
         self.combo_poli.pack(fill=tk.X, pady=(0, 15))
 
-        # Field Tanggal Kunjungan (Dummy default hari ini)
-        tk.Label(
-            form_frame,
-            text="Tanggal",
-            font=("Arial", 10, "bold"),
-            fg="#334155",
-            bg="#F8FAFC",
-        ).pack(anchor="w", pady=(5, 2))
-        date_wrapper = tk.Frame(
-            form_frame,
-            bg="#FFFFFF",
-            highlightbackground="#E2E8F0",
-            highlightthickness=1,
-        )
-        date_wrapper.pack(fill=tk.X, pady=(0, 15), ipady=4)
-        lbl_date = tk.Label(
-            date_wrapper,
-            text="06/07/2026",
-            font=("Arial", 11),
-            fg="#0F172A",
-            bg="#FFFFFF",
-            anchor="w",
-        )
-        lbl_date.pack(fill=tk.X, padx=10, pady=4)
-
         # Field Keluhan (Menggunakan Text widget tipis menggantikan entry lama)
         tk.Label(
             form_frame,
