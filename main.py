@@ -27,9 +27,8 @@ class MainApp(tk.Tk):
 
         self.show_login()
 
-    # =====================================================
     # Menghapus frame yang sedang aktif
-    # =====================================================
+
     def clear_frame(self):
         if self.current_frame is not None:
             self.current_frame.destroy()
