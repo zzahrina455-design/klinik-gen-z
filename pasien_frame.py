@@ -26,6 +26,9 @@ class PasienFrame(tk.Frame):
         self.buat_sidebar()
         self.buat_konten_antrian()
         self.load_notifikasi()
+        
+        # Jalankan fitur auto-refresh status/notifikasi sejak aplikasi dibuka
+        self.auto_refresh_notifikasi()
 
     # ======================================================
     # SIDEBAR NAVIGASI (Sisi Kiri)
@@ -172,7 +175,7 @@ class PasienFrame(tk.Frame):
         self.combo_poli.current(0)
         self.combo_poli.pack(fill=tk.X, pady=(0, 15))
 
-        # Field Keluhan (Menggunakan Text widget tipis menggantikan entry lama)
+        # Field Keluhan
         tk.Label(
             form_frame,
             text="Keluhan",
@@ -219,14 +222,14 @@ class PasienFrame(tk.Frame):
 
         panel_title = tk.Label(
             queue_panel,
-            text="Antrian Hari Ini",
+            text="Notifikasi Antrian Anda",
             font=("Arial", 12, "bold"),
             fg="#0F172A",
             bg="#FFFFFF",
         )
         panel_title.pack(anchor="w", pady=(0, 15))
 
-        # Container list notifikasi / antrian (Pengganti listbox kaku)
+        # Container list notifikasi / antrian
         self.queue_container = tk.Frame(queue_panel, bg="#FFFFFF")
         self.queue_container.pack(fill=tk.BOTH, expand=True)
 
@@ -251,7 +254,7 @@ class PasienFrame(tk.Frame):
         if aktif:
             messagebox.showwarning(
                 "Peringatan", "Anda masih memiliki antrian aktif."
-                )
+            )
             return
 
         poli = self.combo_poli.get()
@@ -261,7 +264,7 @@ class PasienFrame(tk.Frame):
         formatted_antrian = f"A{nomor:03}"
         self.lbl_nomor.config(
             text=f"Antrian Anda: {formatted_antrian} ({poli})"
-            )
+        )
 
         pesan = (
             f"Nomor antrian Anda {formatted_antrian} "
@@ -274,10 +277,11 @@ class PasienFrame(tk.Frame):
         self.load_notifikasi()
 
     def load_notifikasi(self):
-        # Bersihkan container lama
+        # Bersihkan container lama agar tidak menumpuk saat di-refresh
         for widget in self.queue_container.winfo_children():
             widget.destroy()
 
+        # Mengambil data dari NotifikasiModel database
         data = self.notifikasi_model.semua(self.nama_pasien)
 
         if len(data) == 0:
@@ -291,7 +295,11 @@ class PasienFrame(tk.Frame):
             lbl_empty.pack(pady=20)
             return
 
+        # Ambil maksimal 3 notifikasi terbaru
         for item in data[:3]:
+            pesan_notifikasi = item[2] if len(
+                item) > 2 else "Status diperbarui"
+
             # Membuat Box Card komponen melengkung tipis
             card = tk.Frame(self.queue_container,
                             bg="#F1F5F9",
@@ -299,40 +307,47 @@ class PasienFrame(tk.Frame):
                             pady=10)
             card.pack(fill=tk.X, pady=5)
 
-            # Badge Angka Antrian (Sisi Kiri Card)
-            badge_num = tk.Label(
+            # Icon Badge status di sisi kiri
+            badge_icon = tk.Label(
                 card,
-                text=f"A00{item[0]}",
-                font=("Arial", 11, "bold"),
-                fg="#1A5CFF",
+                text="🔔",
+                font=("Arial", 12),
                 bg="#EBF1FA",
                 padx=6,
                 pady=3,
             )
-            badge_num.pack(side=tk.LEFT, padx=(0, 10))
+            badge_icon.pack(side=tk.LEFT, padx=(0, 10))
 
             # Info Detail Teks (Sisi Kanan Card)
             text_frame = tk.Frame(card, bg="#F1F5F9")
-            text_frame.pack(side=tk.LEFT, fill=tk.X)
+            text_frame.pack(side=tk.LEFT, fill=tk.X, expand=True)
 
-            lbl_user = tk.Label(
+            is_dipanggil = "panggil" in pesan_notifikasi.lower()
+            is_selesai = "selesai" in pesan_notifikasi.lower()
+
+            if is_dipanggil:
+                warna_teks = "#10B981"  # Hijau jika sedang dipanggil
+                teks_bold = "bold"
+            elif is_selesai:
+                warna_teks = "#64748B"  # Abu-abu jika sudah selesai
+                teks_bold = "normal"
+            else:
+                warna_teks = "#0F172A"  # Hitam/Biru gelap default awal daftar
+                teks_bold = "normal"
+
+            lbl_pesan = tk.Label(
                 text_frame,
-                text=self.nama_pasien,
-                font=("Arial", 10, "bold"),
-                fg="#0F172A",
+                text=pesan_notifikasi,
+                font=("Arial", 9, teks_bold),
+                fg=warna_teks,
                 bg="#F1F5F9",
                 anchor="w",
+                justify=tk.LEFT,
+                wraplength=180
             )
-            lbl_user.pack(anchor="w")
+            lbl_pesan.pack(anchor="w", fill=tk.X)
 
-            # Mengambil nama poli dari string pesan notifikasi
-            poli_name = self.combo_poli.get()
-            lbl_poli = tk.Label(
-                text_frame,
-                text=poli_name,
-                font=("Arial", 9),
-                fg="#64748B",
-                bg="#F1F5F9",
-                anchor="w",
-            )
-            lbl_poli.pack(anchor="w")
+    def auto_refresh_notifikasi(self):
+        self.load_notifikasi()
+        # 5000 milidetik = 5 detik
+        self.after(5000, self.auto_refresh_notifikasi)
